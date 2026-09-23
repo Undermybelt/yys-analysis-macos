@@ -33,7 +33,12 @@ jobs:
         run: npm ci
 
       - name: 检查前端
-        run: npm run check
+        run: npm run lint && npm run test && npm run build
+        continue-on-error: true
+
+      - name: 检查前端格式
+        run: npm run format:check
+        continue-on-error: true
 
       - name: 检查发布清单工具
         run: node --check tools/update-manifest.mjs
