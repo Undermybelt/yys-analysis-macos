@@ -781,7 +781,7 @@ pub fn parse_rule_preset(
 /// 从仓库中随版本编译的默认预设加载 28 条胚子规则。
 pub fn load_default_preset() -> Result<ValidatedRulePreset, RuleValidationError> {
     const DEFAULT_PRESET: &str =
-        include_str!("../../../.scratch/yuhun-analysis/presets/author-default-v0.1.0.yysrule.json");
+        include_str!("../../resources/presets/author-default-v0.1.0.yysrule.json");
     parse_rule_preset(DEFAULT_PRESET.as_bytes(), ValidationLimits::default())
 }
 
