@@ -1,0 +1,6 @@
+[toolchain]
+# Tauri 依赖跟随稳定 Rust；fmt 与 clippy 是门票要求的本地质量入口。
+channel = "stable"
+profile = "minimal"
+components = ["rustfmt", "clippy"]
+

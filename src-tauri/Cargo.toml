@@ -1,0 +1,44 @@
+[package]
+name = "yys-analysis"
+version = "0.1.0-macos.1"
+description = "本地优先的阴阳师御魂分析桌面应用"
+authors = ["YYS Analysis Contributors"]
+edition = "2024"
+rust-version = "1.85"
+license = "MIT"
+build = "build.rs"
+
+[lib]
+name = "yys_analysis_core"
+# macOS 版使用 rlib，避免生成无关移动端动态库。
+crate-type = ["rlib"]
+
+[features]
+# Release 构建必须启用自定义协议，才能加载内嵌 dist，而不是回退到 devUrl。
+custom-protocol = ["tauri/custom-protocol"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+chrono = { version = "0.4", default-features = false, features = ["clock", "std"] }
+ed25519-dalek = { version = "2", default-features = false, features = ["std"] }
+hex = "0.4"
+rustc_version_runtime = "0.3"
+# bundled 保证 SQLite 版本稳定，backup 启用在线备份 API 以生成一致性副本。
+rusqlite = { version = "0.32", features = ["bundled", "backup"] }
+reqwest = { version = "0.13.4", features = ["blocking", "form"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+tauri = { version = "2", features = [] }
+tauri-plugin-opener = "2.5.4"
+tokio = { version = "1", features = ["time"] }
+tracing = "0.1"
+tracing-appender = "0.2"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+uuid = { version = "1", features = ["v4"] }
+zstd = "0.13"
+
+[lints]
+workspace = true

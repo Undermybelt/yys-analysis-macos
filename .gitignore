@@ -1,0 +1,42 @@
+# 前端依赖与构建产物
+node_modules/
+dist/
+
+# Rust 与 Tauri 构建产物
+target/
+src-tauri/target/
+src-tauri/gen/schemas/
+
+# 本地编辑器与系统文件
+.idea/
+.vscode/
+*.swp
+Thumbs.db
+.DS_Store
+
+# 本地日志、环境变量与覆盖配置
+*.log
+.env
+.env.*
+!.env.example
+
+# 本地采集、导出与测试缓存；这些文件不是应用构建输入，避免误纳入版本或扫描范围。
+__pycache__/
+*.pyc
+*.pyo
+yys-desktop-cache-*.json
+yys-desktop-cache-*.log
+yys-desktop-export-*.log
+
+tools/vs_BuildTools.exe
+
+# 本地归档与任务跟踪内容；保留在工作区供恢复和协作使用，但不参与发布构建。
+.backup/
+.scratch/
+
+# 游戏资源提取产物；体积大且受版权保护，不应纳入版本控制。
+res/
+vendor/
+release/
+/.npm-cache/
+/docs/
