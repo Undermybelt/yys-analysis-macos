@@ -6,9 +6,43 @@ on:
   workflow_dispatch:
 
 jobs:
-  quality:
-    name: macOS 质量基线
+  test:
+    name: macOS 测试与构建
     runs-on: macos-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: 安装 Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: 缓存 Rust 构建产物
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri -> target
+
+      - name: 安装前端依赖
+        run: npm ci
+
+      - name: 前端测试与构建
+        run: npm run test && npm run build
+
+      - name: 检查发布清单工具
+        run: node --check tools/update-manifest.mjs
+
+      - name: 运行 Rust 测试
+        run: cargo test --workspace
+
+  style:
+    name: 格式记录
+    runs-on: macos-latest
+    continue-on-error: true
     steps:
       - name: 检出代码
         uses: actions/checkout@v4
@@ -24,31 +58,11 @@ jobs:
         with:
           components: rustfmt, clippy
 
-      - name: 缓存 Rust 构建产物
-        uses: Swatinem/rust-cache@v2
-        with:
-          workspaces: src-tauri -> target
-
       - name: 安装前端依赖
         run: npm ci
 
-      - name: 检查前端
-        run: npm run lint && npm run test && npm run build
-        continue-on-error: true
+      - name: 记录前端格式
+        run: npm run lint; npm run format:check
 
-      - name: 检查前端格式
-        run: npm run format:check
-        continue-on-error: true
-
-      - name: 检查发布清单工具
-        run: node --check tools/update-manifest.mjs
-
-      - name: 检查 Rust 格式
-        run: cargo fmt --all -- --check
-
-      - name: 运行 Rust 静态检查
-        run: cargo clippy --workspace --all-targets -- -D warnings
-        continue-on-error: true
-
-      - name: 运行 Rust 测试
-        run: cargo test --workspace
+      - name: 记录 Rust 格式与静态检查
+        run: cargo fmt --all -- --check; cargo clippy --workspace --all-targets -- -D warnings
